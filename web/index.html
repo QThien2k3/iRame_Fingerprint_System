@@ -3,145 +3,1136 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fingerprint Access Control</title>
-    <link rel="stylesheet" href="styles.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <title>Fingerprint Management System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4285f4;
+            --secondary-color: #34a853;
+            --danger-color: #ea4335;
+            --warning-color: #fbbc05;
+            --bg-color: #f5f5f5;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .logo i {
+            margin-right: 10px;
+        }
+
+        .nav-tabs {
+            display: flex;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 20px;
+        }
+
+        .nav-tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            font-weight: bold;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .nav-tab.active {
+            border-bottom: 3px solid var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .card-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+        }
+
+        .card-icon.primary {
+            background-color: var(--primary-color);
+        }
+
+        .card-icon.success {
+            background-color: var(--secondary-color);
+        }
+
+        .card-icon.danger {
+            background-color: var(--danger-color);
+        }
+
+        .card-value {
+            font-size: 32px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .card-label {
+            color: #777;
+            font-size: 14px;
+        }
+
+        .btn {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn i {
+            margin-right: 8px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #3367d6;
+        }
+
+        .btn-success {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background-color: #2d8e47;
+        }
+
+        .btn-danger {
+            background-color: var(--danger-color);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #d33426;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+
+        tr:hover {
+            background-color: #f9f9f9;
+        }
+
+        .status {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .status.active {
+            background-color: rgba(52, 168, 83, 0.2);
+            color: var(--secondary-color);
+        }
+
+        .status.inactive {
+            background-color: rgba(234, 67, 53, 0.2);
+            color: var(--danger-color);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            animation: fadeIn 0.3s;
+        }
+
+        .modal-content {
+            background-color: var(--card-bg);
+            margin: 10% auto;
+            padding: 20px;
+            border-radius: 10px;
+            width: 50%;
+            max-width: 500px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            animation: slideIn 0.3s;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: black;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .search-bar {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .search-bar input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 5px;
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            display: none;
+            animation: slideInRight 0.3s, fadeOut 0.3s 2.7s;
+            opacity: 0;
+        }
+
+        .notification.success {
+            background-color: var(--secondary-color);
+        }
+
+        .notification.error {
+            background-color: var(--danger-color);
+        }
+
+        .fingerprint-reader {
+            width: 150px;
+            height: 200px;
+            margin: 0 auto;
+            background-color: #eee;
+            border-radius: 10px;
+            border: 2px solid #ccc;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .fingerprint-scanner {
+            width: 100px;
+            height: 100px;
+            background-color: #ddd;
+            border-radius: 50%;
+            position: absolute;
+            top: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .fingerprint-scanner::after {
+            content: "";
+            position: absolute;
+            width: 100%;
+            height: 5px;
+            background-color: var(--primary-color);
+            opacity: 0.7;
+            top: -20px;
+            left: 0;
+            animation: scan 2s infinite;
+        }
+
+        .fingerprint-icon {
+            font-size: 50px;
+            color: #999;
+        }
+
+        .scanning .fingerprint-icon {
+            color: var(--primary-color);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes scan {
+            0% {
+                top: -20px;
+            }
+            100% {
+                top: 120px;
+            }
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.1);
+                opacity: 0.7;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+            }
+            to {
+                opacity: 0;
+            }
+        }
+
+        .loading {
+            animation: rotate 2s linear infinite;
+        }
+
+        @keyframes rotate {
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .placeholder {
+            height: 20px;
+            background-color: #eee;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            animation: pulse 2s infinite;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-content {
+                width: 90%;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>Hệ thống kiểm soát truy cập vân tay</h1>
-            <div class="nav-buttons">
-                <button id="home-btn" class="active">Trang chính</button>
-                <button id="manage-btn">Quản lý vân tay</button>
-                <button id="history-btn">Lịch sử quét</button>
+            <div class="logo">
+                <i class="fas fa-fingerprint"></i> Fingerprint Management System
             </div>
         </div>
 
-        <div id="home-panel" class="panel active">
-            <div class="status-card">
-                <h2>Trạng thái hệ thống</h2>
-                <div class="status-indicator online">
-                    <span class="dot"></span>
-                    <span id="system-status">Trực tuyến</span>
-                </div>
-                <div class="last-scan">
-                    <p>Lần quét cuối: <span id="last-scan-time">--</span></p>
-                    <p>ID vân tay: <span id="last-scan-id">--</span></p>
-                    <p>Trạng thái: <span id="last-scan-status">--</span></p>
-                </div>
-            </div>
+        <div class="nav-tabs">
+            <div class="nav-tab active" data-tab="dashboard">Dashboard</div>
+            <div class="nav-tab" data-tab="management">Management</div>
+            <div class="nav-tab" data-tab="history">Scan History</div>
+        </div>
+
+        <!-- Dashboard Tab -->
+        <div class="tab-content active" id="dashboard">
             <div class="dashboard">
-                <div class="chart-container">
-                    <canvas id="access-chart"></canvas>
-                </div>
-                <div class="stats">
-                    <div class="stat-card">
-                        <h3>Tổng vân tay</h3>
-                        <p id="total-fingerprints">0</p>
-                    </div>
-                    <div class="stat-card">
-                        <h3>Quét hôm nay</h3>
-                        <p id="today-scans">0</p>
-                    </div>
-                    <div class="stat-card">
-                        <h3>Từ chối hôm nay</h3>
-                        <p id="today-denied">0</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div id="manage-panel" class="panel">
-            <div class="fingerprint-form">
-                <h2>Thêm vân tay mới</h2>
-                <div class="fingerprint-scanner">
-                    <div class="scanner-img">
-                        <img src="fingerprint.png" alt="Fingerprint Scanner">
-                    </div>
-                    <div class="scanner-status">
-                        <p id="scanner-msg">Đặt ngón tay lên cảm biến để đăng ký vân tay mới</p>
-                        <div class="progress-bar">
-                            <div class="progress" id="scan-progress" style="width: 0%"></div>
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Total Fingerprints</h3>
+                        <div class="card-icon primary">
+                            <i class="fas fa-fingerprint"></i>
                         </div>
                     </div>
+                    <div class="card-value" id="totalFingerprints">0</div>
+                    <div class="card-label">Registered fingerprints</div>
                 </div>
-                <div class="form-group">
-                    <label for="finger-id">ID vân tay:</label>
-                    <input type="text" id="finger-id" placeholder="Tự động cấp hoặc nhập ID" readonly>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Recent Scans</h3>
+                        <div class="card-icon success">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                    </div>
+                    <div class="card-value" id="recentScans">0</div>
+                    <div class="card-label">Last 24 hours</div>
                 </div>
-                <div class="form-group">
-                    <label for="finger-name">Tên người dùng:</label>
-                    <input type="text" id="finger-name" placeholder="Nhập tên người dùng">
-                </div>
-                <div class="form-group">
-                    <label for="finger-access">Quyền truy cập:</label>
-                    <select id="finger-access">
-                        <option value="full">Toàn quyền</option>
-                        <option value="limited">Hạn chế</option>
-                        <option value="guest">Khách</option>
-                    </select>
-                </div>
-                <div class="button-group">
-                    <button id="start-enroll" class="primary-btn">Bắt đầu đăng ký</button>
-                    <button id="cancel-enroll" class="secondary-btn" disabled>Hủy</button>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Failed Attempts</h3>
+                        <div class="card-icon danger">
+                            <i class="fas fa-times-circle"></i>
+                        </div>
+                    </div>
+                    <div class="card-value" id="failedAttempts">0</div>
+                    <div class="card-label">Last 24 hours</div>
                 </div>
             </div>
-            <div class="fingerprint-list">
-                <h2>Danh sách vân tay</h2>
-                <div class="search-bar">
-                    <input type="text" id="search-fingerprints" placeholder="Tìm kiếm...">
+
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Latest Activities</h3>
                 </div>
-                <table id="fingerprints-table">
+                <table>
                     <thead>
                         <tr>
-                            <th>ID vân tay</th>
-                            <th>Tên</th>
-                            <th>Quyền truy cập</th>
-                            <th>Thao tác</th>
+                            <th>No.</th>
+                            <th>Name</th>
+                            <th>Time</th>
+                            <th>Status</th>
                         </tr>
                     </thead>
-                    <tbody id="fingerprints-list">
-                        <!-- Dữ liệu sẽ được thêm bằng JavaScript -->
+                    <tbody id="activitiesTable">
+                        <tr>
+                            <td colspan="4">No recent activities</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="action-buttons" style="margin-top: 20px;">
+                <button class="btn btn-primary" onclick="showTab('management')">
+                    <i class="fas fa-cog"></i> Manage Fingerprints
+                </button>
+                <button class="btn btn-success" onclick="showTab('history')">
+                    <i class="fas fa-history"></i> View Scan History
+                </button>
+            </div>
+        </div>
+
+        <!-- Management Tab -->
+        <div class="tab-content" id="management">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Fingerprint Registration</h3>
+                </div>
+                
+                <div class="fingerprint-reader" id="fingerprintReader">
+                    <div class="fingerprint-scanner">
+                        <i class="fas fa-fingerprint fingerprint-icon"></i>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="newFingerprintId">Fingerprint ID:</label>
+                    <input type="number" id="newFingerprintId" min="1" max="127" value="1">
+                </div>
+                
+                <div class="form-group">
+                    <label for="fingerprintName">Name:</label>
+                    <input type="text" id="fingerprintName" placeholder="Enter user name">
+                </div>
+                
+                <div class="action-buttons">
+                    <button class="btn btn-primary" id="enrollBtn" onclick="enrollFingerprint()">
+                        <i class="fas fa-user-plus"></i> Enroll Fingerprint
+                    </button>
+                    <button class="btn btn-danger" id="deleteBtn" onclick="showDeleteModal()">
+                        <i class="fas fa-trash"></i> Delete Fingerprint
+                    </button>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Registered Fingerprints</h3>
+                </div>
+                <div class="search-bar">
+                    <input type="text" id="searchFingerprint" placeholder="Search by name or ID">
+                    <button class="btn btn-primary" onclick="searchFingerprints()">
+                        <i class="fas fa-search"></i> Search
+                    </button>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Registration Date</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="fingerprintsTable">
+                        <tr>
+                            <td colspan="5">No fingerprints registered</td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
         </div>
 
-        <div id="history-panel" class="panel">
-            <h2>Lịch sử quét vân tay</h2>
-            <div class="filter-bar">
-                <div class="date-filter">
-                    <label for="date-from">Từ:</label>
-                    <input type="date" id="date-from">
-                    <label for="date-to">Đến:</label>
-                    <input type="date" id="date-to">
+        <!-- History Tab -->
+        <div class="tab-content" id="history">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Fingerprint Scan History</h3>
                 </div>
                 <div class="search-bar">
-                    <input type="text" id="search-history" placeholder="Tìm kiếm...">
-                    <button id="filter-btn">Lọc</button>
+                    <input type="text" id="searchHistory" placeholder="Search by name or date">
+                    <button class="btn btn-primary" onclick="searchHistory()">
+                        <i class="fas fa-search"></i> Search
+                    </button>
                 </div>
-            </div>
-            <table id="history-table">
-                <thead>
-                    <tr>
-                        <th>STT</th>
-                        <th>Tên</th>
-                        <th>Thời gian quét</th>
-                    </tr>
-                </thead>
-                <tbody id="history-list">
-                    <!-- Dữ liệu sẽ được thêm bằng JavaScript -->
-                </tbody>
-            </table>
-            <div class="pagination">
-                <button id="prev-page">Trước</button>
-                <span id="page-info">Trang 1 / 1</span>
-                <button id="next-page">Sau</button>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>No.</th>
+                            <th>Name</th>
+                            <th>Scan Time</th>
+                        </tr>
+                    </thead>
+                    <tbody id="historyTable">
+                        <tr>
+                            <td colspan="3">No scan history</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <!-- Delete Modal -->
+    <div id="deleteModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeDeleteModal()">&times;</span>
+            <h2>Delete Fingerprint</h2>
+            <div class="form-group">
+                <label for="deleteId">Fingerprint ID to Delete:</label>
+                <input type="number" id="deleteId" min="1" max="127" value="1">
+            </div>
+            <div class="action-buttons">
+                <button class="btn btn-danger" onclick="deleteFingerprint()">
+                    <i class="fas fa-trash"></i> Delete
+                </button>
+                <button class="btn btn-primary" onclick="closeDeleteModal()">
+                    <i class="fas fa-times"></i> Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification -->
+    <div id="notification" class="notification"></div>
+
+    <script>
+        // E-Ra IoT platform communication variables
+        let eraData = {
+            fingerprints: [],
+            scanHistory: [],
+            activityLog: [],
+            settings: {
+                totalFingerprints: 0,
+                recentScans: 0,
+                failedAttempts: 0
+            }
+        };
+
+        // Sample data for demonstration - will be replaced with actual data from E-Ra
+        function loadSampleData() {
+            eraData.fingerprints = [
+                { id: 1, name: "John Doe", date: "2025-05-18", status: "active" },
+                { id: 2, name: "Jane Smith", date: "2025-05-17", status: "active" },
+                { id: 3, name: "Bob Johnson", date: "2025-05-15", status: "inactive" }
+            ];
+            
+            eraData.scanHistory = [
+                { id: 1, name: "John Doe", time: "2025-05-19 09:45:22" },
+                { id: 2, name: "Jane Smith", time: "2025-05-19 08:30:15" },
+                { id: 1, name: "John Doe", time: "2025-05-18 17:22:10" },
+                { id: 3, name: "Bob Johnson", time: "2025-05-18 14:10:05" },
+                { id: 2, name: "Jane Smith", time: "2025-05-18 11:05:37" }
+            ];
+            
+            eraData.activityLog = [
+                { id: 1, name: "John Doe", time: "2025-05-19 09:45:22", status: "success" },
+                { id: 0, name: "Unknown", time: "2025-05-19 09:20:45", status: "failed" },
+                { id: 2, name: "Jane Smith", time: "2025-05-19 08:30:15", status: "success" }
+            ];
+            
+            eraData.settings = {
+                totalFingerprints: eraData.fingerprints.length,
+                recentScans: 5,
+                failedAttempts: 1
+            };
+            
+            // Update dashboard
+            updateDashboard();
+            updateTables();
+        }
+
+        // Load sample data for demonstration
+        loadSampleData();
+        
+        // Function to initialize communication with E-Ra platform
+        function initEraConnection() {
+            // This function would set up WebSocket or MQTT connection to E-Ra
+            // For demonstration purposes, we're just using sample data
+            
+            // Simulating real-time data updates from E-Ra
+            setInterval(() => {
+                // Simulate a new fingerprint scan
+                if (Math.random() > 0.7) {
+                    const fingerprintId = Math.floor(Math.random() * eraData.fingerprints.length) + 1;
+                    const fingerprint = eraData.fingerprints.find(f => f.id === fingerprintId);
+                    
+                    if (fingerprint) {
+                        const now = new Date();
+                        const timeStr = now.toISOString().replace('T', ' ').substring(0, 19);
+                        
+                        // Add to scan history
+                        eraData.scanHistory.unshift({
+                            id: fingerprintId,
+                            name: fingerprint.name,
+                            time: timeStr
+                        });
+                        
+                        // Add to activity log
+                        eraData.activityLog.unshift({
+                            id: fingerprintId,
+                            name: fingerprint.name,
+                            time: timeStr,
+                            status: "success"
+                        });
+                        
+                        // Update counters
+                        eraData.settings.recentScans++;
+                        
+                        // Update UI
+                        updateDashboard();
+                        updateTables();
+                        
+                        // Show notification
+                        showNotification(`Fingerprint scan detected: ${fingerprint.name}`, "success");
+                    }
+                }
+            }, 15000); // Simulate activity every 15 seconds
+        }
+        
+        // Initialize connection
+        initEraConnection();
+
+        // Navigation
+        function showTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.nav-tab').forEach(navTab => {
+                navTab.classList.remove('active');
+            });
+            
+            document.getElementById(tabId).classList.add('active');
+            document.querySelector(`.nav-tab[data-tab="${tabId}"]`).classList.add('active');
+        }
+
+        document.querySelectorAll('.nav-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                showTab(tab.getAttribute('data-tab'));
+            });
+        });
+
+        // Update dashboard data
+        function updateDashboard() {
+            document.getElementById('totalFingerprints').textContent = eraData.settings.totalFingerprints;
+            document.getElementById('recentScans').textContent = eraData.settings.recentScans;
+            document.getElementById('failedAttempts').textContent = eraData.settings.failedAttempts;
+        }
+
+        // Update tables
+        function updateTables() {
+            // Update activities table
+            const activitiesTable = document.getElementById('activitiesTable');
+            if (eraData.activityLog.length > 0) {
+                let activitiesHtml = '';
+                eraData.activityLog.slice(0, 5).forEach((activity, index) => {
+                    const statusClass = activity.status === 'success' ? 'active' : 'inactive';
+                    activitiesHtml += `
+                        <tr>
+                            <td>${index + 1}</td>
+                            <td>${activity.name}</td>
+                            <td>${activity.time}</td>
+                            <td><span class="status ${statusClass}">${activity.status}</span></td>
+                        </tr>
+                    `;
+                });
+                activitiesTable.innerHTML = activitiesHtml;
+            } else {
+                activitiesTable.innerHTML = '<tr><td colspan="4">No recent activities</td></tr>';
+            }
+            
+            // Update fingerprints table
+            const fingerprintsTable = document.getElementById('fingerprintsTable');
+            if (eraData.fingerprints.length > 0) {
+                let fingerprintsHtml = '';
+                eraData.fingerprints.forEach(fingerprint => {
+                    const statusClass = fingerprint.status === 'active' ? 'active' : 'inactive';
+                    fingerprintsHtml += `
+                        <tr>
+                            <td>${fingerprint.id}</td>
+                            <td>${fingerprint.name}</td>
+                            <td>${fingerprint.date}</td>
+                            <td><span class="status ${statusClass}">${fingerprint.status}</span></td>
+                            <td>
+                                <button class="btn btn-danger" onclick="promptDeleteFingerprint(${fingerprint.id})">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                });
+                fingerprintsTable.innerHTML = fingerprintsHtml;
+            } else {
+                fingerprintsTable.innerHTML = '<tr><td colspan="5">No fingerprints registered</td></tr>';
+            }
+            
+            // Update history table
+            const historyTable = document.getElementById('historyTable');
+            if (eraData.scanHistory.length > 0) {
+                let historyHtml = '';
+                eraData.scanHistory.forEach((scan, index) => {
+                    historyHtml += `
+                        <tr>
+                            <td>${index + 1}</td>
+                            <td>${scan.name}</td>
+                            <td>${scan.time}</td>
+                        </tr>
+                    `;
+                });
+                historyTable.innerHTML = historyHtml;
+            } else {
+                historyTable.innerHTML = '<tr><td colspan="3">No scan history</td></tr>';
+            }
+        }
+
+        // Show notification
+        function showNotification(message, type) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = 'notification ' + type;
+            notification.style.display = 'block';
+            notification.style.opacity = '1';
+            
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                setTimeout(() => {
+                    notification.style.display = 'none';
+                }, 300);
+            }, 3000);
+        }
+
+        // Enroll fingerprint
+        function enrollFingerprint() {
+            const id = parseInt(document.getElementById('newFingerprintId').value);
+            const name = document.getElementById('fingerprintName').value.trim();
+            
+            if (!name) {
+                showNotification("Please enter a name", "error");
+                return;
+            }
+            
+            // Check if ID already exists
+            if (eraData.fingerprints.some(f => f.id === id)) {
+                showNotification("Fingerprint ID already exists", "error");
+                return;
+            }
+            
+            // Simulate fingerprint enrollment process
+            document.getElementById('enrollBtn').disabled = true;
+            document.getElementById('fingerprintReader').classList.add('scanning');
+            showNotification("Place finger on the scanner", "success");
+            
+            // Send command to E-Ra (in real implementation)
+            // eraClient.send('V4', id);
+            
+            setTimeout(() => {
+                showNotification("Remove finger", "success");
+                
+                setTimeout(() => {
+                    showNotification("Place finger again", "success");
+                    
+                    setTimeout(() => {
+                        // Add fingerprint to the list
+                        const today = new Date().toISOString().split('T')[0];
+                        eraData.fingerprints.push({
+                            id: id,
+                            name: name,
+                            date: today,
+                            status: 'active'
+                        });
+                        
+                        eraData.settings.totalFingerprints = eraData.fingerprints.length;
+                        
+                        // Update UI
+                        updateDashboard();
+                        updateTables();
+                        
+                        // Reset form
+                        document.getElementById('fingerprintName').value = '';
+                        document.getElementById('newFingerprintId').value = id + 1;
+                        
+                        showNotification("Fingerprint enrolled successfully", "success");
+                        document.getElementById('fingerprintReader').classList.remove('scanning');
+                        document.getElementById('enrollBtn').disabled = false;
+                    }, 2000);
+                }, 2000);
+            }, 2000);
+        }
+
+        // Delete fingerprint modal
+        function showDeleteModal() {
+            document.getElementById('deleteModal').style.display = 'block';
+        }
+
+        function closeDeleteModal() {
+            document.getElementById('deleteModal').style.display = 'none';
+        }
+
+        function promptDeleteFingerprint(id) {
+            document.getElementById('deleteId').value = id;
+            showDeleteModal();
+        }
+
+        // Delete fingerprint
+        function deleteFingerprint() {
+            const id = parseInt(document.getElementById('deleteId').value);
+            
+            // Check if fingerprint exists
+            const fingerprintIndex = eraData.fingerprints.findIndex(f => f.id === id);
+            if (fingerprintIndex === -1) {
+                showNotification("Fingerprint ID not found", "error");
+                return;
+            }
+            
+            // Send command to E-Ra (in real implementation)
+            // eraClient.send('V5', id);
+            
+            // Simulate deletion process
+            showNotification("Deleting fingerprint...", "success");
+            
+            setTimeout(() => {
+                // Remove fingerprint from the list
+                eraData.fingerprints.splice(fingerprintIndex, 1);
+                eraData.settings.totalFingerprints = eraData.fingerprints.length;
+                
+                // Update UI
+                updateDashboard();
+                updateTables();
+                
+                showNotification("Fingerprint deleted successfully", "success");
+                closeDeleteModal();
+            }, 1000);
+        }
+
+        // Search fingerprints
+        function searchFingerprints() {
+            const searchTerm = document.getElementById('searchFingerprint').value.toLowerCase();
+            const fingerprintsTable = document.getElementById('fingerprintsTable');
+            
+            if (!searchTerm) {
+                updateTables();
+                return;
+            }
+            
+            const filteredFingerprints = eraData.fingerprints.filter(fingerprint => 
+                fingerprint.name.toLowerCase().includes(searchTerm) || 
+                fingerprint.id.toString().includes(searchTerm)
+            );
+            
+            if (filteredFingerprints.length > 0) {
+                let fingerprintsHtml = '';
+                filteredFingerprints.forEach(fingerprint => {
+                    const statusClass = fingerprint.status === 'active' ? 'active' : 'inactive';
+                    fingerprintsHtml += `
+                        <tr>
+                            <td>${fingerprint.id}</td>
+                            <td>${fingerprint.name}</td>
+                            <td>${fingerprint.date}</td>
+                            <td><span class="status ${statusClass}">${fingerprint.status}</span></td>
+                            <td>
+                                <button class="btn btn-danger" onclick="promptDeleteFingerprint(${fingerprint.id})">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                });
+                fingerprintsTable.innerHTML = fingerprintsHtml;
+            } else {
+                fingerprintsTable.innerHTML = '<tr><td colspan="5">No matching fingerprints found</td></tr>';
+            }
+        }
+
+        // Search history
+        function searchHistory() {
+            const searchTerm = document.getElementById('searchHistory').value.toLowerCase();
+            const historyTable = document.getElementById('historyTable');
+            
+            if (!searchTerm) {
+                updateTables();
+                return;
+            }
+            
+            const filteredHistory = eraData.scanHistory.filter(scan => 
+                scan.name.toLowerCase().includes(searchTerm) || 
+                scan.time.toLowerCase().includes(searchTerm)
+            );
+            
+            if (filteredHistory.length > 0) {
+                let historyHtml = '';
+                filteredHistory.forEach((scan, index) => {
+                    historyHtml += `
+                        <tr>
+                            <td>${index + 1}</td>
+                            <td>${scan.name}</td>
+                            <td>${scan.time}</td>
+                        </tr>
+                    `;
+                });
+                historyTable.innerHTML = historyHtml;
+            } else {
+                historyTable.innerHTML = '<tr><td colspan="3">No matching scan history found</td></tr>';
+            }
+        }
+
+        // Function to link with real E-Ra data
+        function connectToERa() {
+            // This function would establish connection with the E-Ra platform
+            // And set up event listeners for incoming data
+            
+            // Example of how to handle incoming fingerprint data from E-Ra
+            // For actual implementation, this would be connected to the E-Ra API
+            window.addEventListener('message', function(event) {
+                if (event.data && event.data.type === 'fingerprint-data') {
+                    // Process incoming fingerprint data
+                    handleFingerprintData(event.data);
+                }
+            });
+        }
+
+        // Handle incoming fingerprint data from E-Ra
+        function handleFingerprintData(data) {
+            // Process different types of fingerprint events
+            switch(data.event) {
+                case 'scan':
+                    // Handle fingerprint scan event
+                    const fingerprintId = data.id;
+                    const fingerprint = eraData.fingerprints.find(f => f.id === fingerprintId);
+                    
+                    if (fingerprint) {
+                        // Update scan history and activity log
+                        eraData.scanHistory.unshift({
+                            id: fingerprintId,
+                            name: fingerprint.name,
+                            time: data.time
+                        });
+                        
+                        eraData.activityLog.unshift({
+                            id: fingerprintId,
+                            name: fingerprint.name,
+                            time: data.time,
+                            status: "success"
+                        });
+                        
+                        eraData.settings.recentScans++;
+                    } else {
+                        // Unknown fingerprint
+                        eraData.activityLog.unshift({
+                            id: 0,
+                            name: "Unknown",
+                            time: data.time,
+                            status: "failed"
+                        });
+                        
+                        eraData.settings.failedAttempts++;
+                    }
+                    
+                    // Update UI
+                    updateDashboard();
+                    updateTables();
+                    break;
+                    
+                case 'enroll':
+                    // Handle fingerprint enrollment confirmation
+                    if (data.success) {
+                        // Find temporary fingerprint entry and update status
+                        const fingerprintIndex = eraData.fingerprints.findIndex(f => f.id === data.id);
+                        if (fingerprintIndex !== -1) {
+                            eraData.fingerprints[fingerprintIndex].status = 'active';
+                            showNotification("Fingerprint enrollment confirmed", "success");
+                        }
+                    } else {
+                        showNotification("Fingerprint enrollment failed", "error");
+                    }
+                    
+                    // Update UI
+                    updateTables();
+                    break;
+                    
+                case 'delete':
+                    // Handle fingerprint deletion confirmation
+                    if (data.success) {
+                        showNotification("Fingerprint deletion confirmed", "success");
+                    } else {
+                        showNotification("Fingerprint deletion failed", "error");
+                    }
+                    break;
+            }
+        }
+
+        // Try to connect when the window loads
+        window.addEventListener('load', function() {
+            connectToERa();
+        });
+    </script>
 </body>
 </html>
