@@ -1,86 +1,147 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Fingerprint Management</title>
-  <link rel="stylesheet" href="styles.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fingerprint Access Control</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-  <div class="status-container">
-    <div class="status-box">
-      <h3>Trạng thái vân tay</h3>
-      <p id="fingerStatus">Chưa có</p>
+    <div class="container">
+        <div class="header">
+            <h1>Hệ thống kiểm soát truy cập vân tay</h1>
+            <div class="nav-buttons">
+                <button id="home-btn" class="active">Trang chính</button>
+                <button id="manage-btn">Quản lý vân tay</button>
+                <button id="history-btn">Lịch sử quét</button>
+            </div>
+        </div>
+
+        <div id="home-panel" class="panel active">
+            <div class="status-card">
+                <h2>Trạng thái hệ thống</h2>
+                <div class="status-indicator online">
+                    <span class="dot"></span>
+                    <span id="system-status">Trực tuyến</span>
+                </div>
+                <div class="last-scan">
+                    <p>Lần quét cuối: <span id="last-scan-time">--</span></p>
+                    <p>ID vân tay: <span id="last-scan-id">--</span></p>
+                    <p>Trạng thái: <span id="last-scan-status">--</span></p>
+                </div>
+            </div>
+            <div class="dashboard">
+                <div class="chart-container">
+                    <canvas id="access-chart"></canvas>
+                </div>
+                <div class="stats">
+                    <div class="stat-card">
+                        <h3>Tổng vân tay</h3>
+                        <p id="total-fingerprints">0</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Quét hôm nay</h3>
+                        <p id="today-scans">0</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Từ chối hôm nay</h3>
+                        <p id="today-denied">0</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="manage-panel" class="panel">
+            <div class="fingerprint-form">
+                <h2>Thêm vân tay mới</h2>
+                <div class="fingerprint-scanner">
+                    <div class="scanner-img">
+                        <img src="fingerprint.png" alt="Fingerprint Scanner">
+                    </div>
+                    <div class="scanner-status">
+                        <p id="scanner-msg">Đặt ngón tay lên cảm biến để đăng ký vân tay mới</p>
+                        <div class="progress-bar">
+                            <div class="progress" id="scan-progress" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="finger-id">ID vân tay:</label>
+                    <input type="text" id="finger-id" placeholder="Tự động cấp hoặc nhập ID" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="finger-name">Tên người dùng:</label>
+                    <input type="text" id="finger-name" placeholder="Nhập tên người dùng">
+                </div>
+                <div class="form-group">
+                    <label for="finger-access">Quyền truy cập:</label>
+                    <select id="finger-access">
+                        <option value="full">Toàn quyền</option>
+                        <option value="limited">Hạn chế</option>
+                        <option value="guest">Khách</option>
+                    </select>
+                </div>
+                <div class="button-group">
+                    <button id="start-enroll" class="primary-btn">Bắt đầu đăng ký</button>
+                    <button id="cancel-enroll" class="secondary-btn" disabled>Hủy</button>
+                </div>
+            </div>
+            <div class="fingerprint-list">
+                <h2>Danh sách vân tay</h2>
+                <div class="search-bar">
+                    <input type="text" id="search-fingerprints" placeholder="Tìm kiếm...">
+                </div>
+                <table id="fingerprints-table">
+                    <thead>
+                        <tr>
+                            <th>ID vân tay</th>
+                            <th>Tên</th>
+                            <th>Quyền truy cập</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody id="fingerprints-list">
+                        <!-- Dữ liệu sẽ được thêm bằng JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="history-panel" class="panel">
+            <h2>Lịch sử quét vân tay</h2>
+            <div class="filter-bar">
+                <div class="date-filter">
+                    <label for="date-from">Từ:</label>
+                    <input type="date" id="date-from">
+                    <label for="date-to">Đến:</label>
+                    <input type="date" id="date-to">
+                </div>
+                <div class="search-bar">
+                    <input type="text" id="search-history" placeholder="Tìm kiếm...">
+                    <button id="filter-btn">Lọc</button>
+                </div>
+            </div>
+            <table id="history-table">
+                <thead>
+                    <tr>
+                        <th>STT</th>
+                        <th>Tên</th>
+                        <th>Thời gian quét</th>
+                    </tr>
+                </thead>
+                <tbody id="history-list">
+                    <!-- Dữ liệu sẽ được thêm bằng JavaScript -->
+                </tbody>
+            </table>
+            <div class="pagination">
+                <button id="prev-page">Trước</button>
+                <span id="page-info">Trang 1 / 1</span>
+                <button id="next-page">Sau</button>
+            </div>
+        </div>
     </div>
-  </div>
 
-  <div class="menu">
-    <button id="btnManage">Quản lý vân tay</button>
-    <button id="btnHistory">Lịch sử quét</button>
-  </div>
-
-  <div id="manageSection" class="section">
-    <h2>Quản lý người dùng vân tay</h2>
-    <table>
-      <tr>
-        <th>STT</th>
-        <th>Họ tên</th>
-        <th>Giới tính</th>
-        <th>Fingerprint ID</th>
-        <th>Hành động</th>
-      </tr>
-      <!-- Dòng mẫu -->
-      <tr>
-        <td>1</td>
-        <td>Nguyễn Văn A</td>
-        <td>Nam</td>
-        <td>ID 1</td>
-        <td>
-          <button onclick="openEditModal(1)">Edit</button>
-          <button onclick="deleteUser(1)">Delete</button>
-          <button onclick="syncUser(1)">Sync</button>
-        </td>
-      </tr>
-    </table>
-  </div>
-
-  <div id="historySection" class="section">
-    <h2>Lịch sử quét vân tay</h2>
-    <table>
-      <tr>
-        <th>STT</th>
-        <th>Họ tên</th>
-        <th>Giới tính</th>
-        <th>Thời gian</th>
-      </tr>
-      <!-- Dòng mẫu -->
-      <tr>
-        <td>1</td>
-        <td>Nguyễn Văn A</td>
-        <td>Nam</td>
-        <td>2025-05-18 15:40:00</td>
-      </tr>
-    </table>
-  </div>
-
-  <!-- Modal chỉnh sửa user -->
-  <div id="editModal" class="modal">
-    <div class="modal-content">
-      <h3>Chỉnh sửa người dùng</h3>
-      <form id="editForm">
-        <label>ID:</label>
-        <input type="text" id="editId" readonly />
-        <label>Họ tên:</label>
-        <input type="text" id="editName" />
-        <label>Giới tính:</label>
-        <input type="text" id="editGender" />
-        <label>Fingerprint ID:</label>
-        <input type="text" id="editFingerData" />
-        <button type="button" onclick="saveUser()">Lưu</button>
-        <button type="button" onclick="closeEditModal()">Hủy</button>
-      </form>
-    </div>
-  </div>
-
-  <script src="app.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
