@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <title>Fingerprint Management</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="status-container">
+    <div class="status-box">
+      <h3>Trạng thái vân tay</h3>
+      <p id="fingerStatus">Chưa có</p>
+    </div>
+  </div>
+
+  <div class="menu">
+    <button id="btnManage">Quản lý vân tay</button>
+    <button id="btnHistory">Lịch sử quét</button>
+  </div>
+
+  <div id="manageSection" class="section">
+    <h2>Quản lý người dùng vân tay</h2>
+    <table>
+      <tr>
+        <th>STT</th>
+        <th>Họ tên</th>
+        <th>Giới tính</th>
+        <th>Fingerprint ID</th>
+        <th>Hành động</th>
+      </tr>
+      <!-- Dòng mẫu -->
+      <tr>
+        <td>1</td>
+        <td>Nguyễn Văn A</td>
+        <td>Nam</td>
+        <td>ID 1</td>
+        <td>
+          <button onclick="openEditModal(1)">Edit</button>
+          <button onclick="deleteUser(1)">Delete</button>
+          <button onclick="syncUser(1)">Sync</button>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <div id="historySection" class="section">
+    <h2>Lịch sử quét vân tay</h2>
+    <table>
+      <tr>
+        <th>STT</th>
+        <th>Họ tên</th>
+        <th>Giới tính</th>
+        <th>Thời gian</th>
+      </tr>
+      <!-- Dòng mẫu -->
+      <tr>
+        <td>1</td>
+        <td>Nguyễn Văn A</td>
+        <td>Nam</td>
+        <td>2025-05-18 15:40:00</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Modal chỉnh sửa user -->
+  <div id="editModal" class="modal">
+    <div class="modal-content">
+      <h3>Chỉnh sửa người dùng</h3>
+      <form id="editForm">
+        <label>ID:</label>
+        <input type="text" id="editId" readonly />
+        <label>Họ tên:</label>
+        <input type="text" id="editName" />
+        <label>Giới tính:</label>
+        <input type="text" id="editGender" />
+        <label>Fingerprint ID:</label>
+        <input type="text" id="editFingerData" />
+        <button type="button" onclick="saveUser()">Lưu</button>
+        <button type="button" onclick="closeEditModal()">Hủy</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
